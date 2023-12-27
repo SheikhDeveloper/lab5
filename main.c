@@ -43,20 +43,14 @@ int main() {
             case 'b':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
-<<<<<<< HEAD
-=======
                 if (filename == NULL) return 0;
->>>>>>> ed02f4a81f4249472c32eb39257e3b1d1f833d2f
                 in_file = fopen(filename, "r");
                 if (in_file == NULL) error = FILENAME_ERROR;
                 break;
             case 'c':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
-<<<<<<< HEAD
-=======
                 if (filename == NULL) return 0;
->>>>>>> ed02f4a81f4249472c32eb39257e3b1d1f833d2f
                 in_file = fopen(filename, "rb");
                 binary_in = 1;
                 if (in_file == NULL) error = FILENAME_ERROR;
