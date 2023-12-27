@@ -214,7 +214,6 @@ int main() {
             default:
                 error = STATE_ERROR;
                 fprintf(stderr, STATE_ERROR);
-                return 0;
                 break;
         }
         scanf("%*c");
