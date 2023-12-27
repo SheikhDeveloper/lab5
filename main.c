@@ -12,7 +12,7 @@
 #define CMP_MENU "Введите поле сортировки массива:\n\t(a)Имя\n\t(b)Номер участка\n\t(c)Возраст\nПоле сортировки: "
 #define REV_MENU "Введите направление сортировки:\n\t(a)Прямое\n\t(b)Обратное\nНаправление сортировки: "
 #define STATE_ERROR "Ошибка: выбрано неверное состояние\nПовторите последовательность выбора заново\n"
-#define FILENAME_ERROR "Ошибка: файла с таким названием не существует.\nПовторите последовательность выборов\n"
+#define FILENAME_ERROR "Ошибка: файла с таки названием не существует.\nПовторите последовательность выборов\n"
 #define FILE_READ_ERROR "Ошибка: указанный файл пуст или формат всех данных в нём некорректен.\nПовторите последовательность выборов\n"
 
 void sort(Array *a, void (*sorter)(Array*, int (*)(Elector*, Elector*), int), int (*cmp)(Elector*, Elector*), int reversed);
@@ -22,8 +22,8 @@ int main() {
     char *filename = NULL;
     Array voters;
     voters.arr = NULL;
-    FILE *in_file = NULL;
-    FILE *out_file = NULL;;
+    FILE *in_file;
+    FILE *out_file;
     int (*cmp)(Elector*, Elector*);
     void (*sorting) (Array*, int (*)(Elector*, Elector*), int);
     int binary_in = 0;
@@ -43,12 +43,20 @@ int main() {
             case 'b':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
+<<<<<<< HEAD
+=======
+                if (filename == NULL) return 0;
+>>>>>>> ed02f4a81f4249472c32eb39257e3b1d1f833d2f
                 in_file = fopen(filename, "r");
                 if (in_file == NULL) error = FILENAME_ERROR;
                 break;
             case 'c':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
+<<<<<<< HEAD
+=======
+                if (filename == NULL) return 0;
+>>>>>>> ed02f4a81f4249472c32eb39257e3b1d1f833d2f
                 in_file = fopen(filename, "rb");
                 binary_in = 1;
                 if (in_file == NULL) error = FILENAME_ERROR;
@@ -68,6 +76,7 @@ int main() {
             continue;
         }
         voters = read_from_file(in_file, binary_in);
+        if (in_file != stdin) fclose(in_file);
         if (voters.arr == NULL) {
             error = FILE_READ_ERROR;
             fprintf(stdout, "%s", error);
@@ -89,11 +98,19 @@ int main() {
             case 'b':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
+                if (filename == NULL) {
+                    free_array(&voters);
+                    return 0;
+                }
                 out_file = fopen(filename, "w");
                 break;
             case 'c':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
+                if (filename == NULL) {
+                    free_array(&voters);
+                    return 0;
+                }
                 out_file = fopen(filename, "wb");
                 binary_out = 1;
                 break;
@@ -116,6 +133,7 @@ int main() {
         scanned = scanf("%c", &state);
         if (scanned == EOF) {
             free_array(&voters);
+            if (out_file != stdout) fclose(out_file);
             return 0;
         }
         switch (state) {
@@ -145,6 +163,7 @@ int main() {
         scanned = scanf("%c", &state);
         if (scanned == EOF) {
             free_array(&voters);
+            if (out_file != stdout) fclose(out_file);
             return 0;
         }
         switch (state) {
@@ -174,6 +193,7 @@ int main() {
         scanned = scanf("%c", &state);
         if (scanned == EOF) {
             free_array(&voters);
+            if (out_file != stdout) fclose(out_file);
             return 0;
         }
         switch (state) {
@@ -198,14 +218,13 @@ int main() {
         }
         sort(&voters, sorting, cmp, reversed);
         write_to_file(out_file, voters, binary_out);
+        if (out_file != stdout) fclose(out_file);
         printf(SUCCESS);
         free_array(&voters);
         voters.arr = NULL;
         printf(INPUT_MENU);
         scanned = scanf("%c", &state);
     }
-    if (in_file != NULL) fclose(in_file);
-    if (out_file != NULL) fclose(out_file);
     return 0;
 }
 

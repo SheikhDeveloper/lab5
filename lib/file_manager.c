@@ -73,9 +73,11 @@ Elector *read_struct_from_file(FILE *f) {
         return NULL;
     }
     if (f == stdin) fprintf(stdout, "Введите номер участка: ");
-    int scanned = fscanf(f, "%7[A-Za-z{3}-0-9{3}]", result->id);
+    int scanned = fscanf(f, "%3[A-Za-z]%1[-]%3[0-9]", result->id, result->id + 3, result->id + 4);
     fscanf(f, "%*c");
-    if (scanned == 0) {
+    if (scanned != 3) {
+        fscanf(f, "%*[^\n]");
+        fscanf(f, "%*c");
         fprintf(stderr, FORMAT_ERROR);
         free(result->name);
         result->name = NULL;
@@ -85,6 +87,8 @@ Elector *read_struct_from_file(FILE *f) {
     scanned = fscanf(f, "%d", &(result->age));
     fscanf(f, "%*c");
     if (scanned == 0) {
+        fscanf(f, "%*[^\n]");
+        fscanf(f, "%*c");
         fprintf(stderr, FORMAT_ERROR);
         free(result->name);
         result->name = NULL;
