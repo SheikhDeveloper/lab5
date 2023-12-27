@@ -110,13 +110,13 @@ int main() {
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
                 if (filename == NULL) return 0;
-                out_file = fopen(filename, "w+");
+                out_file = fopen(filename, "w");
                 break;
             case 'b':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
                 if (filename == NULL) return 0;
-                out_file = fopen(filename, "w+b");
+                out_file = fopen(filename, "wb");
                 binary_out = 1;
                 break;
             case 'c':
@@ -143,10 +143,10 @@ int main() {
             arr = gen_arr(arr_size);
             begin = clock();
             sort(&arr, cmp, reversed);
+            end = clock();
             if (out_file != NULL) {
                 write_to_file(out_file, arr, binary_out);
             }
-            end = clock();
             time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
             free_array(&arr);
         }
