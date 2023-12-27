@@ -2,14 +2,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include "lib/generator.h"
-#include "lib/sort.c"
+#include "lib/sort.h"
 #include "lib/voters.h"
+#include "lib/file_manager.h"
 
 #define SORT_MENU "Введите способ сортировки:\n\t(a)\"Пузырёк\"\n\t(b)Сортировка двойным выбором\n\t(c)Быстрая сортировка\nСпособ сортировки: "
 #define CMP_MENU "Введите поле сортировки массива:\n\t(a)Имя\n\t(b)Номер участка\n\t(c)Возраст\nПоле сортировки: "
 #define REV_MENU "Введите направление сортировки:\n\t(a)Прямое\n\t(b)Обратное\nНаправление сортировки: "
+#define OUTPUT_MENU "Выберете файл, в который необходимо выводить результаты сортировок:\n\t(a)текстовый файл\n\t(b)бинарный файл\nТип файла: "
 #define STATE_ERROR "Ошибка: выбрано неверное состояние\nПовторите последовательность выбора заново\n"
-#define FORMAT_ERROR "Ошибка: некорректный формат ввода\nПовторите ввод: "
+#define INP_FORMAT_ERROR "Ошибка: некорректный формат ввода\nПовторите ввод: "
 
 int get_size(size_t *num);
 
@@ -23,6 +25,9 @@ int main() {
     size_t arr_size, arr_amount;
     clock_t begin, end;
     Array arr;
+    char *filename;
+    FILE *out_file = NULL;
+    int binary_out = 0;
     printf(SORT_MENU);
     scanned = scanf("%c", &state);
     while (scanned != EOF) {
@@ -51,10 +56,7 @@ int main() {
         }
         printf(CMP_MENU);
         scanned = scanf("%c", &state);
-        if (scanned == EOF) {
-            free_array(&arr);
-            return 0;
-        }
+        if (scanned == EOF) return 0;
         switch (state) {
             case 'a':
                 cmp = name_cmp;
@@ -79,10 +81,7 @@ int main() {
         }
         printf(REV_MENU);
         scanned = scanf("%c", &state);
-        if (scanned == EOF) {
-            free_array(&arr);
-            return 0;
-        }
+        if (scanned == EOF) return 0;
         switch (state) {
             case 'a':
                 reversed = 0;
@@ -102,19 +101,60 @@ int main() {
             scanned = scanf("%c", &state);
             continue;
         }
+        printf(OUTPUT_MENU);
+        scanned = scanf("%c", &state);
+        if (scanned == EOF) return 0;
+        scanf("%*c");
+        switch (state) {
+            case 'a':
+                printf("Введите название файла: ");
+                filename = freadline(stdin);
+                if (filename == NULL) return 0;
+                out_file = fopen(filename, "w+");
+                break;
+            case 'b':
+                printf("Введите название файла: ");
+                filename = freadline(stdin);
+                if (filename == NULL) return 0;
+                out_file = fopen(filename, "w+b");
+                binary_out = 1;
+                break;
+            case 'c':
+                break;
+            default:
+                error = STATE_ERROR;
+                break;
+        }
+        free(filename);
+        filename = NULL;
         printf("Введите количество элементов в генерируемых массивах: ");
         scanned = get_size(&arr_size);
+        if (scanned == EOF) {
+            if (out_file != NULL) fclose(out_file);
+            return 0;
+        }
         printf("Введите количество генерируемых массивов: ");
         scanned = get_size(&arr_amount);
+        if (scanned == EOF) {
+            if (out_file != NULL) fclose(out_file);
+            return 0;
+        }
         for (size_t i = 0; i < arr_amount; i++) {
             arr = gen_arr(arr_size);
             begin = clock();
             sort(&arr, cmp, reversed);
+            if (out_file != NULL) {
+                write_to_file(out_file, arr, binary_out);
+            }
             end = clock();
             time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
             free_array(&arr);
         }
         printf("Среднее время сортировки: %lf c\n", time_spent / arr_amount);
+        if (out_file != NULL) {
+            fclose(out_file);
+            binary_out = 0;
+        }
         printf(SORT_MENU);
         scanned = scanf("%c", &state);
     }
@@ -124,7 +164,7 @@ int get_size(size_t *num) {
     int scanned = scanf("%zu", num);
     if (scanned == EOF) return EOF;
     while (scanned != 1) {
-        printf(FORMAT_ERROR);
+        printf(INP_FORMAT_ERROR);
         scanned = scanf("%zu", num);
         if (scanned == EOF) return EOF;
     }

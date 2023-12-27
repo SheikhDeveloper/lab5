@@ -12,8 +12,8 @@ all: lab5_1 lab5_2
 lab5_1: voters.o file_manager.o sort.o main.o 
 	${CC} ${ASAN} voters.o file_manager.o sort.o main.o -o $@
 
-lab5_2: voters.o sort.o generator.o timer.o
-	${CC} ${ASAN} voters.o generator.o timer.o -o $@ 
+lab5_2: voters.o file_manager.o sort.o generator.o timer.o
+	${CC} ${ASAN} voters.o file_manager.o sort.o generator.o timer.o -o $@ 
 
 voters.o : lib/voters.c lib/voters.h
 	${CC} ${CFLAGS} ${ASAN} -c lib/voters.c -o $@
@@ -38,7 +38,7 @@ debug: ${SRCS} ${HEADERS}
 	${CC} -c ${CFLAGS} main.c -o main.o
 	${CC} -c ${CFLAGS} timer.c -o timer.o
 	${CC} voters.o file_manager.o sort.o main.o -o $@_1
-	${CC} voters.o generator.o timer.o -o $@_2
+	${CC} voters.o file_manager.o sort.o generator.o timer.o -o $@_2
 
 .PHONY : lab5_1 lab5_2 clean static debug
 

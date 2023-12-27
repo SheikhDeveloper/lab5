@@ -15,9 +15,7 @@ Array gen_arr(size_t size) {
 Elector *gen_struc() {
     Elector *res = (Elector *)malloc(sizeof(Elector));
     res->name = gen_name();
-    char new_id[8];
-    *(new_id + 3) = '-';
-    *(new_id + 7) = 0;
+    char new_id[8] = "FOO-123";
     char *tmp = new_id;
     while (*tmp != '-') {
         *tmp++ = gen_letter();
@@ -26,6 +24,7 @@ Elector *gen_struc() {
     while (*tmp != 0) {
         *tmp++ = gen_digit();
     }
+    strcpy(res->id, new_id);
     res->age = gen_age();
     return res;
 }
