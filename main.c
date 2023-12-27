@@ -87,12 +87,12 @@ int main() {
             case 'b':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
-                out_file = fopen(filename, "w+");
+                out_file = fopen(filename, "w");
                 break;
             case 'c':
                 printf("Введите название файла: ");
                 filename = freadline(stdin);
-                out_file = fopen(filename, "w+b");
+                out_file = fopen(filename, "wb");
                 binary_out = 1;
                 break;
             default:
