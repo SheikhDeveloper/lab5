@@ -8,11 +8,11 @@
 #define SUCCESS "\nДействие совершено!\n"
 #define INPUT_MENU "Введите способ получения массива:\n\t(a)С клавиатуры\n\t(b)Из текстового файла\n\t(c)Из бинарного файла\nСпособ получения массива: "
 #define OUTPUT_MENU "Введите способ вывода отсортированного массива:\n\t(a)На экран\n\t(b)В текстовый файл\n\t(c)В бинарный файл\nСпособ вывода массива: "
-#define SORT_MENU "Введите способ сортировки:\n\t(a)\"Пузырёк\"\n\t(b)Сортировка двойным выбором\n\t(c)Быстрая сортировка\nСпособ сортировки: "
+#define SORT_MENU "Введите способ сортировки:\n\t(a)\"Пузырёк\"\n\t(b)Сортировка двойным выбором\n\t(c)Быстрая сортировка\n\t(d)Не сортировать массив\nСпособ сортировки: "
 #define CMP_MENU "Введите поле сортировки массива:\n\t(a)Имя\n\t(b)Номер участка\n\t(c)Возраст\nПоле сортировки: "
 #define REV_MENU "Введите направление сортировки:\n\t(a)Прямое\n\t(b)Обратное\nНаправление сортировки: "
 #define STATE_ERROR "Ошибка: выбрано неверное состояние\nПовторите последовательность выбора заново\n"
-#define FILENAME_ERROR "Ошибка: файла с таки названием не существует.\nПовторите последовательность выборов\n"
+#define FILENAME_ERROR "Ошибка: файла с таким названием не существует.\nПовторите последовательность выборов\n"
 #define FILE_READ_ERROR "Ошибка: указанный файл пуст или формат всех данных в нём некорректен.\nПовторите последовательность выборов\n"
 
 void sort(Array *a, void (*sorter)(Array*, int (*)(Elector*, Elector*), int), int (*cmp)(Elector*, Elector*), int reversed);
@@ -30,6 +30,7 @@ int main() {
     int binary_out = 0; 
     int reversed;
     int scanned = 0;
+    int no_sorting = 0;
     char state;
     printf(INPUT_MENU);
     scanned = scanf("%c", &state);
@@ -140,6 +141,9 @@ int main() {
             case 'c':
                 sorting = quicksort;
                 break;
+            case 'd':
+                no_sorting = 1;
+                break;
             default:
                 error = STATE_ERROR;
                 fprintf(stderr, STATE_ERROR);
@@ -149,6 +153,16 @@ int main() {
         if (error != NULL) {
             error = NULL;
             free_array(&voters);
+            printf(INPUT_MENU);
+            scanned = scanf("%c", &state);
+            continue;
+        }
+        if (no_sorting) {
+            write_to_file(out_file, voters, binary_out);
+            if (out_file != stdout) fclose(out_file);
+            free_array(&voters);
+            no_sorting = 0;
+            printf(SUCCESS);
             printf(INPUT_MENU);
             scanned = scanf("%c", &state);
             continue;
