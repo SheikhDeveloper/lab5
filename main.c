@@ -80,6 +80,7 @@ int main() {
             free_array(&voters);
             return 0;
         }
+        scanf("%*c");
         switch (state) {
             case 'a':
                 out_file = stdout;
@@ -101,7 +102,6 @@ int main() {
         }
         free(filename);
         filename = NULL;
-        scanf("%*c");
         if (error != NULL) {
             binary_out = 0;
             fprintf(stderr, "%s", error);
