@@ -69,7 +69,8 @@ int main() {
         }
         voters = read_from_file(in_file, binary_in);
         if (voters.arr == NULL) {
-            fprintf(stdout, "");
+            error = FILE_READ_ERROR;
+            fprintf(stdout, "%s", error);
             printf(INPUT_MENU);
             scanned = scanf("%c", &state);
             continue;
