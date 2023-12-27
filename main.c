@@ -71,6 +71,7 @@ int main() {
             continue;
         }
         voters = read_from_file(in_file, binary_in);
+        binary_in = 0;
         if (in_file != stdin) fclose(in_file);
         if (voters.arr == NULL) {
             error = FILE_READ_ERROR;
@@ -162,6 +163,7 @@ int main() {
             if (out_file != stdout) fclose(out_file);
             free_array(&voters);
             no_sorting = 0;
+            binary_out = 0;
             printf(SUCCESS);
             printf(INPUT_MENU);
             scanned = scanf("%c", &state);
@@ -226,6 +228,7 @@ int main() {
         }
         sort(&voters, sorting, cmp, reversed);
         write_to_file(out_file, voters, binary_out);
+        binary_out = 0;
         if (out_file != stdout) fclose(out_file);
         printf(SUCCESS);
         free_array(&voters);
