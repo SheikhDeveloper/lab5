@@ -81,7 +81,6 @@ Elector *read_struct_from_file(FILE *f) {
         fprintf(stderr, FORMAT_ERROR);
         free(result->name);
         result->name = NULL;
-        return result;
     }
     if (f == stdin) fprintf(stdout, "Введите возраст избирателя: ");
     scanned = fscanf(f, "%d", &(result->age));
@@ -92,7 +91,6 @@ Elector *read_struct_from_file(FILE *f) {
         fprintf(stderr, FORMAT_ERROR);
         free(result->name);
         result->name = NULL;
-        return result;
     }
     return result;
 }
