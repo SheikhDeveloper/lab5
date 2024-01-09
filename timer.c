@@ -9,7 +9,7 @@
 #define SORT_MENU "Введите способ сортировки:\n\t(a)\"Пузырёк\"\n\t(b)Сортировка двойным выбором\n\t(c)Быстрая сортировка\nСпособ сортировки: "
 #define CMP_MENU "Введите поле сортировки массива:\n\t(a)Имя\n\t(b)Номер участка\n\t(c)Возраст\nПоле сортировки: "
 #define REV_MENU "Введите направление сортировки:\n\t(a)Прямое\n\t(b)Обратное\nНаправление сортировки: "
-#define OUTPUT_MENU "Выберете файл, в который необходимо выводить результаты сортировок:\n\t(a)текстовый файл\n\t(b)бинарный файл\nТип файла: "
+#define OUTPUT_MENU "Выберете файл, в который необходимо выводить результаты сортировок:\n\t(a)текстовый файл\n\t(b)бинарный файл\n\t(c)никуда не выводить\nТип файла: "
 #define STATE_ERROR "Ошибка: выбрано неверное состояние\nПовторите последовательность выбора заново\n"
 #define INP_FORMAT_ERROR "Ошибка: некорректный формат ввода\nПовторите ввод: "
 
@@ -120,13 +120,16 @@ int main() {
                 binary_out = 1;
                 break;
             case 'c':
+                filename = NULL;
                 break;
             default:
                 error = STATE_ERROR;
                 break;
         }
-        free(filename);
-        filename = NULL;
+        if (filename) {
+            free(filename);
+            filename = NULL;
+        }
         printf("Введите количество элементов в генерируемых массивах: ");
         scanned = get_size(&arr_size);
         if (scanned == EOF) {
@@ -146,6 +149,7 @@ int main() {
             end = clock();
             if (out_file != NULL) {
                 write_to_file(out_file, arr, binary_out);
+                if (i < arr_amount - 1) fprintf(out_file, "\n\n");
             }
             time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
             free_array(&arr);
