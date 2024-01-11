@@ -154,7 +154,7 @@ int main() {
             time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
             free_array(&arr);
         }
-        printf("Среднее время сортировки: %lf c\n", time_spent / arr_amount);
+        fprintf(stderr, "Среднее время сортировки: %lf c\n", time_spent / arr_amount);
         if (out_file != NULL) {
             fclose(out_file);
             binary_out = 0;
